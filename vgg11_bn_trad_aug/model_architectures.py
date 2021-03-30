@@ -232,12 +232,10 @@ class ConvolutionalNetwork(nn.Module):
         """
         Builds network whilst automatically inferring shapes of layers.
         """
-        # pretrained = models.resnet50(pretrained=False)
-        # pretrained.fc = nn.Linear(2048,self.num_output_classes)
+        print("Using prebuilt ResNet model modified for {} output classes".format(self.num_output_classes))
 
         pretrained = models.vgg11_bn(pretrained=False)
-		#replacing last linear layer to give outputs equal to the number of classes
-        pretrained.classifier[6] = nn.Linear(4096,self.num_output_classes)
+        pretrained.fc = nn.Linear(2048,self.num_output_classes)
 
         return pretrained
 
@@ -260,3 +258,13 @@ class ConvolutionalNetwork(nn.Module):
     #             pass
 
     #     self.logit_linear_layer.reset_parameters()
+
+# conv_net = ConvolutionalNetwork(10)
+
+
+
+pretrained = models.vgg11_bn(pretrained=False)
+
+for i,j in pretrained.named_parameters():
+    print(i, j)
+# pretrained.fc = nn.Linear(2048,self.num_output_classes)

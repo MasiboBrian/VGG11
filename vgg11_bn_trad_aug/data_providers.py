@@ -395,7 +395,7 @@ class AugmentedCIFAR10(data.Dataset):
 
     def __len__(self):
         return self.data.shape[0]
-
+    
     def __getitem__(self, idx):
 
         img = self.data[idx]
@@ -412,10 +412,10 @@ class AugmentedCIFAR10(data.Dataset):
         return img, label
 
 
-class CIFAR100(CIFAR10):
+class CIFAR100(CIFAR100):
     """`CIFAR100 <https://www.cs.toronto.edu/~kriz/cifar.html>`_ Dataset.
 
-    This is a subclass of the `CIFAR10` Dataset.
+    This is a subclass of the `CIFAR100` Dataset.
     """
     base_folder = 'cifar-100-python'
     url = "https://www.cs.toronto.edu/~kriz/cifar-100-python.tar.gz"

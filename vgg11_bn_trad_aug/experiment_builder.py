@@ -60,7 +60,7 @@ class ExperimentBuilder(nn.Module):
         self.weight_decay_coefficient = weight_decay_coefficient
 
         self.optimizer = optim.SGD(self.parameters(), lr=self.learning_rate, momentum=0.9, weight_decay=self.weight_decay_coefficient)
-        # self.scheduler = torch.optim.lr_scheduler.StepLR(self.optimizer, step_size = 100, gamma = 0.1)
+        self.scheduler = torch.optim.lr_scheduler.StepLR(self.optimizer, step_size = 100, gamma = 0.1)
 
         print('System learnable parameters')
 
@@ -71,7 +71,7 @@ class ExperimentBuilder(nn.Module):
             print(name, value.shape)
             if all(item in name for item in ['conv', 'weight']):
                 num_conv_layers += 1
-            if all(item in name for item in ['classifier', 'weight']):
+            if all(item in name for item in ['fc', 'weight']):
                 num_linear_layers += 1
             total_num_parameters += np.prod(value.shape)
 
@@ -207,7 +207,7 @@ class ExperimentBuilder(nn.Module):
                 pbar_train.update(1)
                 pbar_train.set_description("loss: {:.4f}, accuracy: {:.4f}".format(loss, accuracy))
 
-        # self.scheduler.step()  # update network parameters AFTER training epoch, not training iteration
+        self.scheduler.step()  # update network parameters
 
         return current_epoch_losses
 
@@ -296,8 +296,6 @@ class ExperimentBuilder(nn.Module):
                             # save model and best val idx and best val acc, using the model dir, model name and model idx
                             model_save_name="train_model", model_idx='latest', state=self.state)
 
-        print("Best validation model metrics")
-        print("Epoch {}:".format(self.best_val_model_idx), " accuracy:", self.best_val_model_acc)
         print("Generating test set evaluation metrics")
         self.load_model(model_save_dir=self.experiment_saved_models, model_idx=self.best_val_model_idx,
                         # load best validation model
